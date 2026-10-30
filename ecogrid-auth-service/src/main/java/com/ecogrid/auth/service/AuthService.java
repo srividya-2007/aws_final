@@ -1,8 +1,6 @@
 package com.ecogrid.auth.service;
 
-import com.ecogrid.auth.dto.AuthResponse;
-import com.ecogrid.auth.dto.LoginRequest;
-import com.ecogrid.auth.dto.RegisterRequest;
+import com.ecogrid.auth.dto.*;
 import com.ecogrid.auth.model.Role;
 import com.ecogrid.auth.model.User;
 import com.ecogrid.auth.repository.UserRepository;
@@ -32,6 +30,11 @@ public class AuthService {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired(required = false)
+    private OtpService otpService;
+
+    // ─── Direct Register & Login (Maintained for backward compatibility) ─────
 
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -68,6 +71,9 @@ public class AuthService {
     }
 
     public AuthResponse login(LoginRequest request) {
+        if (otpService != null) {
+            return otpService.initiateLogin(request);
+        }
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -83,5 +89,42 @@ public class AuthService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         return new AuthResponse(token, user.getUsername(), user.getRole().name());
+    }
+
+    // ─── OTP-Based Flows ─────────────────────────────────────────────────────
+
+    public AuthResponse signupWithOtp(RegisterRequest request) {
+        if (otpService == null) {
+            throw new IllegalStateException("OTP Service is not configured");
+        }
+        return otpService.initiateSignup(request);
+    }
+
+    public AuthResponse verifySignupOtp(VerifyOtpRequest request) {
+        if (otpService == null) {
+            throw new IllegalStateException("OTP Service is not configured");
+        }
+        return otpService.verifySignupOtp(request);
+    }
+
+    public AuthResponse loginWithOtp(LoginRequest request) {
+        if (otpService == null) {
+            throw new IllegalStateException("OTP Service is not configured");
+        }
+        return otpService.initiateLogin(request);
+    }
+
+    public AuthResponse verifyLoginOtp(VerifyOtpRequest request) {
+        if (otpService == null) {
+            throw new IllegalStateException("OTP Service is not configured");
+        }
+        return otpService.verifyLoginOtp(request);
+    }
+
+    public AuthResponse resendOtp(ResendOtpRequest request) {
+        if (otpService == null) {
+            throw new IllegalStateException("OTP Service is not configured");
+        }
+        return otpService.resendOtp(request);
     }
 }

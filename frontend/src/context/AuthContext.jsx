@@ -35,12 +35,42 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (username, password) => {
     const res = await authAPI.login({ username, password });
-    const { token, username: uname, role } = res.data;
+    if (res.data.otpRequired) {
+      return res.data;
+    }
+    const { token, refreshToken, username: uname, role } = res.data;
     localStorage.setItem('token', token);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     localStorage.setItem('username', uname);
     localStorage.setItem('role', role);
     setUser({ token, username: uname, role });
     return role;
+  }, []);
+
+  const verifyLoginOtp = useCallback(async ({ email, otpCode, username }) => {
+    const res = await authAPI.verifyLoginOtp({ email, otpCode, username });
+    const { token, refreshToken, username: uname, role } = res.data;
+    localStorage.setItem('token', token);
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+    localStorage.setItem('username', uname);
+    localStorage.setItem('role', role);
+    setUser({ token, username: uname, role });
+    return role;
+  }, []);
+
+  const signup = useCallback(async (payload) => {
+    const res = await authAPI.signup(payload);
+    return res.data;
+  }, []);
+
+  const verifySignupOtp = useCallback(async ({ email, otpCode }) => {
+    const res = await authAPI.verifySignupOtp({ email, otpCode });
+    return res.data;
+  }, []);
+
+  const resendOtp = useCallback(async ({ email, purpose }) => {
+    const res = await authAPI.resendOtp({ email, purpose });
+    return res.data;
   }, []);
 
   const register = useCallback(async (payload) => {
@@ -57,7 +87,19 @@ export function AuthProvider({ children }) {
   const hasRole = (r) => user?.role === r;
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAuthenticated, login, register, logout, hasRole }}>
+    <AuthContext.Provider value={{
+      user,
+      loading,
+      isAuthenticated,
+      login,
+      verifyLoginOtp,
+      signup,
+      verifySignupOtp,
+      resendOtp,
+      register,
+      logout,
+      hasRole
+    }}>
       {children}
     </AuthContext.Provider>
   );

@@ -964,3 +964,120 @@ img { max-width: 100%; }
   .auth-card { padding: 24px 20px; }
   .page-content { padding: 16px; }
 }
+
+/* ===================================================
+   EMAIL OTP VERIFICATION COMPONENT
+=================================================== */
+.otp-container {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.otp-header {
+  text-align: center;
+}
+.otp-icon-wrap {
+  width: 58px;
+  height: 58px;
+  background: var(--blue-50);
+  border: 1px solid var(--blue-100);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--blue-600);
+  margin: 0 auto 12px;
+}
+.otp-header h2 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--gray-900);
+}
+.otp-subtitle {
+  color: var(--gray-500);
+  font-size: 0.88rem;
+  margin-top: 4px;
+}
+.otp-email-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  margin-top: 10px;
+  color: var(--gray-700);
+}
+.otp-digits-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+.otp-digit-box {
+  width: 46px;
+  height: 52px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: monospace;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-md);
+  background: var(--gray-50);
+  color: var(--gray-900);
+  outline: none;
+  transition: all 0.2s ease;
+}
+.otp-digit-box:focus {
+  border-color: var(--blue-500);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+.otp-digit-box.filled {
+  border-color: var(--blue-400);
+  background: white;
+}
+.otp-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--gray-600);
+  padding: 4px 2px;
+}
+.otp-timer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+.timer-urgent {
+  color: #dc2626;
+  font-weight: 700;
+}
+.otp-resend-btn {
+  background: none;
+  border: none;
+  color: var(--blue-600);
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s;
+}
+.otp-resend-btn:hover:not(:disabled) {
+  background: var(--blue-50);
+}
+.otp-resend-btn:disabled {
+  color: var(--gray-400);
+  cursor: not-allowed;
+}
+.otp-actions {
+  margin-top: 6px;
+}
+
